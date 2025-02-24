@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Página Web 3.0</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('Probabilidad.JPE');
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        /* Estilos para la portada */
+        .portada {
+            background-color: rgba(0, 123, 255, 0.8); /* Fondo azul con transparencia */
+            height: 100vh; /* Ocupa toda la altura de la pantalla */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .portada h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .portada p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+        .portada a {
+            background-color: #ff00dd; /* Color del botón */
+            color: rgb(255, 255, 255);
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+        .portada a:hover {
+            background-color: #0056b3; /* Color del botón al pasar el mouse */
+        }
+
+        /* Estilos para la sección de más información */
+        #mas-informacion {
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con transparencia */
+            color: black;
+        }
+
+        /* Estilos para el botón de Tareas y botones ocultos */
+        #btnTareas {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hidden-buttons {
+            display: none;
+            position: absolute;
+            top: 60px; /* Ajusta la posición debajo del botón "Tareas" */
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con transparencia */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .hidden-buttons button {
+            display: block; /* Cambia a bloque para que cada botón esté en una línea */
+            width: 100%; /* Ocupa todo el ancho disponible */
+            padding: 10px 20px;
+            background-color: #555;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 5px; /* Espacio entre botones */
+            text-align: left;
+        }
+
+        .hidden-buttons button:last-child {
+            margin-bottom: 0; /* Elimina el margen inferior del último botón */
+        }
+
+        .hidden-buttons button:hover {
+            background-color: #777; /* Cambia el color al pasar el mouse */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Botón de Tareas -->
+    <button id="btnTareas">Tareas</button>
+
+    <!-- Botones ocultos que aparecen al hacer clic en "Tareas" -->
+    <div id="hiddenButtons" class="hidden-buttons">
+        <button>Luis</button>
+        <button>Eretza</button>
+        <button>Emmanuel</button>
+    </div>
+
+    <!-- Portada -->
+    <section class="portada">
+        <h1>¡Bienvenido a la prueba 3!</h1>
+        <p>Esta página está hecha para probabilidad y estadística.</p>
+        <a href="#mas-informacion">Saber más</a>
+    </section>
+
+    <!-- Otras secciones -->
+    <section id="mas-informacion">
+        <h2>Más información</h2>
+        <p>Ingresa una lista de números separados por comas para calcular las métricas estadísticas:</p>
+        
+        <!-- Formulario para ingresar datos -->
+        <form action="/calcular" method="POST">
+            <input type="text" name="datos" placeholder="Ejemplo: 1, 2, 3, 4, 5" required>
+            <button type="submit">Calcular</button>
+        </form>
+    </section>
+
+    <script>
+        // Mostrar/ocultar los botones de "Tareas"
+        const btnTareas = document.getElementById('btnTareas');
+        const hiddenButtons = document.getElementById('hiddenButtons');
+
+        btnTareas.addEventListener('click', function() {
+            if (hiddenButtons.style.display === 'none' || hiddenButtons.style.display === '') {
+                hiddenButtons.style.display = 'block';
+            } else {
+                hiddenButtons.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiación Solar en México - Paneles Solares</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>                  
+    <header>
+        <div class="container">
+            <h1>Radiación Solar en México</h1>
+            <p>¿Te conviene instalar paneles solares en tu casa?</p>
+        </div>
+    </header>
+
+    <section class="intro">
+        <div class="container">
+            <h2>¿Qué es la radiación solar?</h2>
+            <p>La radiación solar es la energía emitida por el sol en forma de luz y calor. En México, contamos con un alto nivel de radiación solar, lo que hace que nuestro país sea ideal para aprovechar esta energía renovable.</p>
+        </div>
+    </section>
+
+    <section class="benefits">
+        <div class="container">
+            <h2>Beneficios de los paneles solares</h2>
+            <ul>
+                <li>Ahorro en tu factura de luz.</li>
+                <li>Energía limpia y renovable.</li>
+                <li>Reducción de tu huella de carbono.</li>
+                <li>Incentivos fiscales y financiamientos disponibles.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="savings">
+        <div class="container">
+            <h2>Calcula tu ahorro</h2>
+            <p>Ingresa tu consumo mensual de electricidad (en kWh) para calcular cuánto podrías ahorrar con paneles solares:</p>
+            <form id="savingsForm">
+                <label for="consumo">Consumo mensual (kWh):</label>
+                <input type="number" id="consumo" name="consumo" required>
+                <button type="button" onclick="calcularAhorro()">Calcular Ahorro</button>
+            </form>
+            <p id="resultado" class="result"></p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Radiación Solar en México. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        function calcularAhorro() {
+            // Obtener el valor del consumo ingresado por el usuario
+            const consumo = parseFloat(document.getElementById('consumo').value);
+
+            // Validar que se haya ingresado un número válido
+            if (isNaN(consumo) || consumo <= 0) {
+                alert("Por favor, ingresa un valor válido.");
+                return;
+            }
+
+            // Supongamos que el ahorro es del 95% (puedes ajustar este valor)
+            const ahorroPorcentaje = 0.95;
+            const ahorroMensual = consumo * ahorroPorcentaje;
+
+            // Mostrar el resultado
+            const resultado = document.getElementById('resultado');
+            resultado.textContent = `Con paneles solares, podrías ahorrar aproximadamente ${ahorroMensual.toFixed(2)} kWh al mes.`;
+            resultado.style.color = "#4CAF50";
+        }
+    </script>
+</body>
+</html>

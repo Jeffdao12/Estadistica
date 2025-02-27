@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Tareas</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        /* Estilos para la sección de subir tareas */
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        .upload-section {
+            margin-bottom: 20px;
+        }
+
+        .upload-section h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .upload-section input[type="file"] {
+            margin-bottom: 15px;
+        }
+
+        .upload-section button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-section button:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #007bff;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Subir Tareas</h1>
+
+        <!-- Sección para Eretza -->
+        <div class="upload-section">
+            <h2>Eretza</h2>
+            <input type="file" id="fileEretza" accept=".pdf,.doc,.docx">
+            <button onclick="uploadFile('fileEretza')">Subir Archivo</button>
+            <div id="messageEretza" class="message"></div>
+        </div>
+
+        <!-- Sección para Luis -->
+        <div class="upload-section">
+            <h2>Luis</h2>
+            <input type="file" id="fileLuis" accept=".pdf,.doc,.docx">
+            <button onclick="uploadFile('fileLuis')">Subir Archivo</button>
+            <div id="messageLuis" class="message"></div>
+        </div>
+
+        <!-- Sección para Emmanuel -->
+        <div class="upload-section">
+            <h2>Emmanuel</h2>
+            <input type="file" id="fileEmmanuel" accept=".pdf,.doc,.docx">
+            <button onclick="uploadFile('fileEmmanuel')">Subir Archivo</button>
+            <div id="messageEmmanuel" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Función para simular la subida de archivos
+        function uploadFile(inputId) {
+            const fileInput = document.getElementById(inputId);
+            const messageElement = document.getElementById(`message${inputId.replace('file', '')}`);
+
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                messageElement.innerText = `Archivo "${fileName}" subido correctamente.`;
+                messageElement.style.color = "#007bff";
+            } else {
+                messageElement.innerText = "Por favor, selecciona un archivo.";
+                messageElement.style.color = "red";
+            }
+        }
+    </script>
+
+</body>
+</html>

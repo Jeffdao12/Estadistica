@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculos Estadísticos</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        /* Estilos para la sección de cálculos */
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: calc(100% - 22px);
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #results {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        canvas {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            text-align: left;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Cálculos Estadísticos</h1>
+        <p>Ingresa una lista de números separados por comas para calcular las métricas estadísticas:</p>
+        <input type="text" id="dataInput" placeholder="Ejemplo: 1, 2, 3, 4, 5" required>
+
+        <!-- Contenedor para los botones -->
+        <div class="buttons-container">
+            <button onclick="calculate('mode')">Calcular Moda</button>
+            <button onclick="calculate('mean')">Calcular Media</button>
+            <button onclick="calculate('median')">Calcular Mediana</button>
+            <button onclick="calculate('variance')">Calcular Varianza</button>
+            <button onclick="calculate('stdDev')">Calcular Desviación Estándar</button>
+            <button onclick="calculate('quartiles')">Calcular Cuartiles</button>
+            <button onclick="calculate('skewness')">Calcular Sesgo</button>
+            <button onclick="calculate('kurtosis')">Calcular Curtosis</button>
+            <button onclick="showHistogram()">Mostrar Histograma</button>
+            <button onclick="showBoxPlot()">Mostrar Caja y Bigote</button>
+            <button onclick="showXYChart()">Mostrar Gráfico XY</button>
+            <button onclick="clearCharts()">Limpiar Gráficos</button>
+            <button onclick="showFormulas()">Mostrar Fórmulas</button>
+        </div>
+
+        <!-- Mensajes de error y resultados -->
+        <div id="error" class="error"></div>
+        <div id="results"></div>
+
+        <!-- Canvas para mostrar los gráficos -->
+        <canvas id="histogramCanvas" width="400" height="200"></canvas>
+        <canvas id="boxPlotCanvas" width="400" height="200"></canvas>
+        <canvas id="xyChartCanvas" width="400" height="200"></canvas>
+    </div>
+
+    <!-- Modal para mostrar las fórmulas -->
+    <div id="formulasModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeFormulasModal()">&times;</span>
+            <h2>Fórmulas Utilizadas</h2>
+            <p><strong>Moda:</strong> Valor que más se repite en el conjunto de datos.</p>
+            <p><strong>Media:</strong> \( \text{Media} = \frac{\sum_{i=1}^{n} x_i}{n} \)</p>
+            <p><strong>Mediana:</strong> Valor central de los datos ordenados.</p>
+            <p><strong>Varianza:</strong> \( \text{Varianza} = \frac{\sum_{i=1}^{n} (x_i - \text{Media})^2}{n} \)</p>
+            <p><strong>Desviación Estándar:</strong> \( \text{Desviación Estándar} = \sqrt{\text{Varianza}} \)</p>
+            <p><strong>Cuartiles:</strong> 
+                <ul>
+                    <li>Q1: Primer cuartil (25% de los datos).</li>
+                    <li>Q2: Segundo cuartil (mediana, 50% de los datos).</li>
+                    <li>Q3: Tercer cuartil (75% de los datos).</li>
+                </ul>
+            </p>
+            <p><strong>Sesgo:</strong> \( \text{Sesgo} = \frac{\sum_{i=1}^{n} \left( \frac{x_i - \text{Media}}{\text{Desviación Estándar}} \right)^3}{n} \)</p>
+            <p><strong>Curtosis:</strong> \( \text{Curtosis} = \frac{\sum_{i=1}^{n} \left( \frac{x_i - \text{Media}}{\text{Desviación Estándar}} \right)^4}{n} - 3 \)</p>
+        </div>
+    </div>
+
+    <!-- Script de Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-boxplot@3.9.0"></script> <!-- Extensión para BoxPlot -->
+    <!-- Script de MathJax para mostrar fórmulas matemáticas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        // Variables para almacenar las instancias de los gráficos
+        let histogramChartInstance = null;
+        let boxPlotChartInstance = null;
+        let xyChartInstance = null;
+
+        // Función principal para calcular
+        function calculate(operation) {
+            const input = document.getElementById('dataInput').value;
+            const data = input.split(',').map(Number);
+            const errorElement = document.getElementById('error');
+            const resultsElement = document.getElementById('results');
+
+            // Validación de datos
+            if (data.some(isNaN)) {
+                errorElement.innerText = 'Por favor, ingresa solo números válidos.';
+                resultsElement.innerText = '';
+                return;
+            } else {
+                errorElement.innerText = '';
+            }
+
+            let result;
+            switch (operation) {
+                case 'mode':
+                    result = getMode(data);
+                    resultsElement.innerText = `Moda: ${result}`;
+                    break;
+                case 'mean':
+                    result = getMean(data);
+                    resultsElement.innerText = `Media: ${result.toFixed(2)}`;
+                    break;
+                case 'median':
+                    result = getMedian(data);
+                    resultsElement.innerText = `Mediana: ${result.toFixed(2)}`;
+                    break;
+                case 'variance':
+                    result = getVariance(data);
+                    resultsElement.innerText = `Varianza: ${result.toFixed(2)}`;
+                    break;
+                case 'stdDev':
+                    result = getStdDev(data);
+                    resultsElement.innerText = `Desviación Estándar: ${result.toFixed(2)}`;
+                    break;
+                case 'quartiles':
+                    const quartiles = getQuartiles(data);
+                    resultsElement.innerText = `Cuartiles: Q1 = ${quartiles.q1.toFixed(2)}, Q2 = ${quartiles.q2.toFixed(2)}, Q3 = ${quartiles.q3.toFixed(2)}`;
+                    break;
+                case 'skewness':
+                    result = getSkewness(data);
+                    resultsElement.innerText = `Sesgo: ${result.toFixed(2)}`;
+                    break;
+                case 'kurtosis':
+                    result = getKurtosis(data);
+                    resultsElement.innerText = `Curtosis: ${result.toFixed(2)}`;
+                    break;
+                default:
+                    resultsElement.innerText = 'Operación no válida';
+            }
+        }
+
+        // Función para mostrar el histograma
+        function showHistogram() {
+            const input = document.getElementById('dataInput').value;
+            const data = input.split(',').map(Number);
+            const errorElement = document.getElementById('error');
+
+            // Validación de datos
+            if (data.some(isNaN)) {
+                errorElement.innerText = 'Por favor, ingresa solo números válidos.';
+                return;
+            } else {
+                errorElement.innerText = '';
+            }
+
+            // Obtener el contexto del canvas para el histograma
+            const ctx = document.getElementById('histogramCanvas').getContext('2d');
+
+            // Destruir el gráfico anterior si existe
+            if (histogramChartInstance) {
+                histogramChartInstance.destroy();
+            }
+
+            // Crear histograma
+            histogramChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data, // Etiquetas para los valores
+                    datasets: [{
+                        label: 'Frecuencia',
+                        data: data,
+                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Función para mostrar el gráfico de caja y bigotes (Box Plot)
+        function showBoxPlot() {
+            const input = document.getElementById('dataInput').value;
+            const data = input.split(',').map(Number);
+            const errorElement = document.getElementById('error');
+
+            // Validación de datos
+            if (data.some(isNaN)) {
+                errorElement.innerText = 'Por favor, ingresa solo números válidos.';
+                return;
+            } else {
+                errorElement.innerText = '';
+            }
+
+            // Obtener el contexto del canvas para el gráfico de caja y bigote
+            const ctx = document.getElementById('boxPlotCanvas').getContext('2d');
+
+            // Destruir el gráfico anterior si existe
+            if (boxPlotChartInstance) {
+                boxPlotChartInstance.destroy();
+            }
+
+            // Crear gráfico de caja y bigotes
+            boxPlotChartInstance = new Chart(ctx, {
+                type: 'boxplot',
+                data: {
+                    labels: ['Datos'], // Etiqueta para el gráfico
+                    datasets: [{
+                        label: 'Caja y Bigote',
+                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 1,
+                        outlierColor: '#999999',
+                        data: [data] // Pasar los datos directamente
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Función para mostrar el gráfico XY o de tendencia
+        function showXYChart() {
+            const input = document.getElementById('dataInput').value;
+            const data = input.split(',').map(Number);
+            const errorElement = document.getElementById('error');
+
+            // Validación de datos
+            if (data.some(isNaN)) {
+                errorElement.innerText = 'Por favor, ingresa solo números válidos.';
+                return;
+            } else {
+                errorElement.innerText = '';
+            }
+
+            // Obtener el contexto del canvas para el gráfico XY
+            const ctx = document.getElementById('xyChartCanvas').getContext('2d');
+
+            // Destruir el gráfico anterior si existe
+            if (xyChartInstance) {
+                xyChartInstance.destroy();
+            }
+
+            // Crear gráfico XY
+            xyChartInstance = new Chart(ctx, {
+                type: 'line', // Tipo de gráfico (puedes cambiarlo a 'scatter' si prefieres puntos)
+                data: {
+                    labels: data.map((_, index) => `Punto ${index + 1}`), // Etiquetas para los puntos
+                    datasets: [{
+                        label: 'Tendencia',
+                        data: data,
+                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 1,
+                        fill: false // No rellenar el área bajo la línea
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Función para limpiar los gráficos
+        function clearCharts() {
+            // Destruir los gráficos si existen
+            if (histogramChartInstance) {
+                histogramChartInstance.destroy();
+                histogramChartInstance = null;
+            }
+            if (boxPlotChartInstance) {
+                boxPlotChartInstance.destroy();
+                boxPlotChartInstance = null;
+            }
+            if (xyChartInstance) {
+                xyChartInstance.destroy();
+                xyChartInstance = null;
+            }
+
+            // Limpiar los canvas
+            const histogramCanvas = document.getElementById('histogramCanvas');
+            const boxPlotCanvas = document.getElementById('boxPlotCanvas');
+            const xyChartCanvas = document.getElementById('xyChartCanvas');
+
+            histogramCanvas.getContext('2d').clearRect(0, 0, histogramCanvas.width, histogramCanvas.height);
+            boxPlotCanvas.getContext('2d').clearRect(0, 0, boxPlotCanvas.width, boxPlotCanvas.height);
+            xyChartCanvas.getContext('2d').clearRect(0, 0, xyChartCanvas.width, xyChartCanvas.height);
+        }
+
+        // Función para mostrar el modal de fórmulas
+        function showFormulas() {
+            const modal = document.getElementById('formulasModal');
+            modal.style.display = 'flex';
+        }
+
+        // Función para cerrar el modal de fórmulas
+        function closeFormulasModal() {
+            const modal = document.getElementById('formulasModal');
+            modal.style.display = 'none';
+        }
+
+        // Funciones auxiliares para cálculos
+        function getMode(arr) {
+            const mode = {};
+            let max = 0, count = 0;
+
+            arr.forEach(item => {
+                if (mode[item]) {
+                    mode[item]++;
+                } else {
+                    mode[item] = 1;
+                }
+
+                if (count < mode[item]) {
+                    max = item;
+                    count = mode[item];
+                }
+            });
+
+            return max;
+        }
+
+        function getMean(arr) {
+            return arr.reduce((a, b) => a + b, 0) / arr.length;
+        }
+
+        function getMedian(arr) {
+            const mid = Math.floor(arr.length / 2);
+            const nums = [...arr].sort((a, b) => a - b);
+            return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+        }
+
+        function getVariance(arr) {
+            const mean = getMean(arr);
+            return arr.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / arr.length;
+        }
+
+        function getStdDev(arr) {
+            return Math.sqrt(getVariance(arr));
+        }
+
+        function getQuartiles(arr) {
+            const sorted = [...arr].sort((a, b) => a - b);
+            const q2 = getMedian(sorted);
+            const q1 = getMedian(sorted.filter(x => x < q2));
+            const q3 = getMedian(sorted.filter(x => x > q2));
+            return { q1, q2, q3 };
+        }
+
+        function getSkewness(arr) {
+            const mean = getMean(arr);
+            const stdDev = getStdDev(arr);
+            const n = arr.length;
+
+            if (stdDev === 0) return 0;
+
+            const thirdMoment = arr.reduce((a, b) => a + Math.pow((b - mean) / stdDev, 3), 0) / n;
+            return thirdMoment;
+        }
+
+        function getKurtosis(arr) {
+            const mean = getMean(arr);
+            const stdDev = getStdDev(arr);
+            const n = arr.length;
+
+            if (stdDev === 0) return 0;
+
+            const fourthMoment = arr.reduce((a, b) => a + Math.pow((b - mean) / stdDev, 4), 0) / n;
+            return fourthMoment - 3;
+        }
+    </script>
+
+</body>
+</html>

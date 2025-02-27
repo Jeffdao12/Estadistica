@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brother´s Company.</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9; /* Fondo claro */
+            color: #333; /* Texto oscuro */
+        }
+
+        /* Estilos para la portada */
+        .portada {
+            background-color: #2c3e50; /* Fondo oscuro profesional */
+            height: 100vh; /* Ocupa toda la altura de la pantalla */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .portada h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #ffffff; /* Texto blanco */
+        }
+        .portada p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #ecf0f1; /* Texto gris claro */
+        }
+        .portada a {
+            background-color: #e67e22; /* Color naranja para el botón */
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
+        }
+        .portada a:hover {
+            background-color: #d35400; /* Naranja más oscuro al pasar el mouse */
+        }
+
+        /* Estilos para el botón de Opciones y botones ocultos */
+        #btnOpciones {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #34495e; /* Fondo oscuro */
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        #btnOpciones:hover {
+            background-color: #2c3e50; /* Fondo más oscuro al pasar el mouse */
+        }
+
+        .hidden-buttons {
+            display: none;
+            position: absolute;
+            top: 60px; /* Ajusta la posición debajo del botón "Opciones" */
+            left: 20px;
+            background-color: #ffffff; /* Fondo blanco */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .hidden-buttons button {
+            display: block; /* Cambia a bloque para que cada botón esté en una línea */
+            width: 100%; /* Ocupa todo el ancho disponible */
+            padding: 10px 20px;
+            background-color: #3498db; /* Azul profesional */
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 5px; /* Espacio entre botones */
+            text-align: left;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .hidden-buttons button:last-child {
+            margin-bottom: 0; /* Elimina el margen inferior del último botón */
+        }
+
+        .hidden-buttons button:hover {
+            background-color: #2980b9; /* Azul más oscuro al pasar el mouse */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Botón de Opciones -->
+    <button id="btnOpciones">Opciones</button>
+
+    <!-- Botones ocultos que aparecen al hacer clic en "Opciones" -->
+    <div id="hiddenButtons" class="hidden-buttons">
+        <button onclick="window.location.href='calculos.html'">Cálculos Estadísticos</button>
+        <button onclick="window.location.href='tareas.html'">Tareas</button>
+    </div>
+
+    <!-- Portada -->
+    <section class="portada">
+        <h1>Brother´s Company.</h1>
+        <p>Soluciones innovadoras para tus necesidades estadísticas y académicas.</p>
+        <a href="#mas-informacion">Saber más</a>
+    </section>
+
+    <script>
+        // Mostrar/ocultar los botones de "Opciones"
+        const btnOpciones = document.getElementById('btnOpciones');
+        const hiddenButtons = document.getElementById('hiddenButtons');
+
+        btnOpciones.addEventListener('click', function() {
+            if (hiddenButtons.style.display === 'none' || hiddenButtons.style.display === '') {
+                hiddenButtons.style.display = 'block';
+            } else {
+                hiddenButtons.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>
